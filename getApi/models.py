@@ -25,9 +25,9 @@ class Location(models.Model):
 
 class Congestion(models.Model):
         CONGESTION_LEVEL_CHOICES = [
-            ('RELEX', 1),
-            ('NORMAL', 2),
-            ('BUZZ', 3),
+            (1, 'RELAX'),
+            (2, 'NORMAL'),
+            (3, 'BUZZ'),
         ]
 
         congestion_id = models.BigAutoField(primary_key=True)
