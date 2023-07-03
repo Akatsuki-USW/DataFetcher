@@ -7,7 +7,6 @@ import pandas as pd
 
 class Command(BaseCommand):
     help = "sk_locationName_fetch"
-    #json만들기.
 
     def handle(self, *args, **options):
         url = "https://apis.openapi.sk.com/puzzle/pois"
@@ -22,10 +21,12 @@ class Command(BaseCommand):
         sk_location_name_data = response.json()
         for location_data in sk_location_name_data['contents']:
             poi_name = location_data['poiName']
+            poiId = location_data['poiId']
             print(poi_name)
+            print(poiId)
 
             # sk는 api2로함. 카테고리는 sql에서 수정해야해서 디폴드2
-            api_id = 2
+
             location_category_id = 2
 
             updated_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -39,7 +40,7 @@ class Command(BaseCommand):
                 name=poi_name,
                 defaults={
                     'name': poi_name,
-                    'api_id': api_id,
+                    'api_id': poiId,
                     'updated_at': updated_at,
                     'created_at': updated_at,
                     'location_category_id': location_category  # 이 부분을 location_category로 수정
