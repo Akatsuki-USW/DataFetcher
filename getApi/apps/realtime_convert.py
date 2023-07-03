@@ -28,7 +28,7 @@ class ConvertCongestionData():
             congestion_level = congestion_data['congestion_level']
             #location_id = Location.objects.get(location_id=congestion_data['location_id'])
 
-            location_id = congestion_data['location_id']  # 수정된 부분: Location 인스턴스 대신 location_id 값을 변수에 저장
+            location_id = congestion_data['location_id']  # Location 인스턴스 대신 location_id 값을 변수에 저장
             location_inst = Location.objects.get(location_id=location_id)  # location_id 값을 가진 Location 인스턴스 가져오기
             observed_at = congestion_data['observed_at']
             #observed_at = datetime.strptime(congestion_data['observed_at'], date_format)
