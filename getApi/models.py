@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 
 class LocationCategory(models.Model):
@@ -17,21 +16,18 @@ class Location(models.Model):
     updated_at = models.CharField(max_length=255, blank=True, null=True)
     api_id = models.BigIntegerField(blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    location_category = models.ForeignKey(LocationCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    location_category_id = models.ForeignKey(LocationCategory, on_delete=models.SET_NULL, null=True, blank=True, db_column='location_category_id')
 
 
     class Meta:
         managed = False
         db_table = 'location'
 
-    from django.db import models
-
 class Congestion(models.Model):
         CONGESTION_LEVEL_CHOICES = [
             ('RELEX', 1),
             ('NORMAL', 2),
             ('BUZZ', 3),
-            ('VERY_BUZZ', 4)
         ]
 
         congestion_id = models.BigAutoField(primary_key=True)

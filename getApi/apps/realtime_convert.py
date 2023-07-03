@@ -17,6 +17,7 @@ class ConvertCongestionData():
 
         # json데이터를 db에 저장
         congestion_data_list = json.loads(json_data)
+        print(congestion_data_list)
 
         # 새로운 데이터를 추가할 때 사용할 id값을 찾.
         max_congestion_id = Congestion.objects.aggregate(Max('congestion_id'))['congestion_id__max'] or 0
@@ -26,13 +27,10 @@ class ConvertCongestionData():
 
         for congestion_data in congestion_data_list:
             congestion_level = congestion_data['congestion_level']
-            #location_id = Location.objects.get(location_id=congestion_data['location_id'])
-
             location_id = congestion_data['location_id']  # Location 인스턴스 대신 location_id 값을 변수에 저장
-            location_inst = Location.objects.get(location_id=location_id)  # location_id 값을 가진 Location 인스턴스 가져오기
-            observed_at = congestion_data['observed_at']
-            #observed_at = datetime.strptime(congestion_data['observed_at'], date_format)
-            #created_at = timezone.localtime(timezone.now())
+            location_inst = Location.objects.filter(location_id=location_id).first()  # location_id 값을 가진 첫번째 Location 인스턴스 가져오기
+            #observed_at = congestion_data['observed_at']
+            observed_at = datetime.strptime(congestion_data['observed_at'], date_format)
 
             _, created = Congestion.objects.update_or_create(
                 congestion_id=max_congestion_id + 1,
