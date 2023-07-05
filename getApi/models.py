@@ -50,3 +50,23 @@ class CongestionStatics(models.Model):
     class Meta:
         managed = False
         db_table = 'congestion_statics'
+
+class DailyCongestionStatistic(models.Model):
+    congestion_statistic_id = models.BigAutoField(primary_key=True)
+    content = models.JSONField(blank=True, null=True)
+    location = models.ForeignKey('Location', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'daily_congestion_statistic'
+
+class WeeklyCongestionStatistic(models.Model):
+    congestion_statistic_id = models.BigAutoField(primary_key=True)
+    created_at = models.CharField(max_length=255, blank=True, null=True)
+    updated_at = models.CharField(max_length=255, blank=True, null=True)
+    congestion_level = models.SmallIntegerField(blank=True, null=True)
+    location = models.ForeignKey(Location, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'weekly_congestion_statistic'

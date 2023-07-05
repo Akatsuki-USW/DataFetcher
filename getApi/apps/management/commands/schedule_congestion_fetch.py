@@ -1,5 +1,3 @@
-# api_server/getApi/apps/management/commands/schedule_congestion_fetch.py
-
 from django.core.management.base import BaseCommand
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
