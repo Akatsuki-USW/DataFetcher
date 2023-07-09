@@ -28,10 +28,10 @@ class Command(BaseCommand):
 
         # lvl을 숫자로 매핑
         congestion_mapping = {
-            '여유': 1,
-            '보통': 2,
-            '약간 붐빔': 3,
-            '붐빔': 3
+            '여유': '1',
+            '보통': '2',
+            '약간 붐빔': '3',
+            '붐빔': '3'
         }
         date_format = '%Y-%m-%d %H:%M:%S'
 

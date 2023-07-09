@@ -25,13 +25,13 @@ class Location(models.Model):
 
 class Congestion(models.Model):
         CONGESTION_LEVEL_CHOICES = [
-            (1, 'RELAX'),
-            (2, 'NORMAL'),
-            (3, 'BUZZ'),
+            (1,'RELAX'),
+            (2,'NORMAL'),
+            (3,'BUZZ'),
         ]
 
         congestion_id = models.BigAutoField(primary_key=True)
-        congestion_level = models.CharField(choices=CONGESTION_LEVEL_CHOICES, max_length=255, blank=True, null=True)
+        congestion_level = models.IntegerField(choices=CONGESTION_LEVEL_CHOICES, blank=True, null=True)
         observed_at = models.DateTimeField(blank=True, null=True)
         location = models.ForeignKey('Location', models.DO_NOTHING)
 
