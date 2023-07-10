@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         scheduler = BackgroundScheduler()
-        trigger = CronTrigger(minute="0", hour="9-23")
+        trigger = CronTrigger(minute="21", hour="9-23")
         scheduler.add_job(congestion_fetch, trigger)
         scheduler.start()
         self.stdout.write(self.style.SUCCESS('스케줄러 시작'))
