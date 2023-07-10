@@ -1,6 +1,6 @@
 from datetime import date, timedelta
 from django.core.management import BaseCommand
-from getApi.models import Congestion
+from getApi.models import Congestion, DailyCongestionStatistic
 
 class Command(BaseCommand):
     help = "daily_congestion_statistic.py"
@@ -11,29 +11,33 @@ class Command(BaseCommand):
 
         congestion_data = Congestion.objects.filter(observed_at__date=yesterday)
 
-        #통계 데이터를 담을 딕셔너리
-        statistics_dict = {}
-
+        location_dict = {} #누적해서 저장하기위해 만듬.
         for congestion in congestion_data:
             location_id = congestion.location_id
             observed_date = congestion.observed_at.strftime("%Y-%m-%d")
             observed_time = congestion.observed_at.strftime("%H")
             congestion_level = congestion.congestion_level
 
-            #딕셔너리에 해당 location_id가 없다면 추가
-            if location_id not in statistics_dict:
-                statistics_dict[location_id] = {
+            if location_id in location_dict:
+                location_dict[location_id]['statistics'].append({
+                    "time": int(observed_time),
+                    "congestionLevel": congestion_level
+                })
+            else:
+                location_dict[location_id] = {
                     "id": location_id,
                     "observedDate": observed_date,
-                    "statistics": []
+                    "statistics": [
+                        {
+                            "time": int(observed_time),
+                            "congestionLevel": congestion_level
+                        }
+                    ]
                 }
 
-            #location_id의 통계 데이터에 추가
-            statistics_dict[location_id]["statistics"].append({
-                "time": int(observed_time),
-                "congestionLevel": congestion_level
-            })
-
-
-        json_data = {"data": list(statistics_dict.values())}
-        print(json_data)
+        for location_id, content in location_dict.items():
+            statistic = DailyCongestionStatistic(
+                location_id=location_id,
+                content=content
+            )
+            statistic.save()
