@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from getApi.models import Congestion
+from getApi.models import Congestion, WeeklyCongestionStatistic
 from django.db.models import Avg
 from datetime import datetime, timedelta
 
@@ -18,9 +18,17 @@ class Command(BaseCommand):
             Congestion.objects
             .filter(observed_at__range=(start_date, end_date))
             .filter(congestion_level__in=[relax_level, normal_level, buzz_level])
-            .values('location__name')
+            .values('location_id')
             .annotate(avg_congestion_level=Avg('congestion_level'))
         )
 
         for item in result:
-            print(item['location__name'], item['avg_congestion_level'])
+            location_id = item['location_id']
+            avg_congestion_level = item['avg_congestion_level']
+
+            # WeeklyCongestionStatistic 생성 및 저장
+            statistic = WeeklyCongestionStatistic.objects.create(
+                average_congestion_level=avg_congestion_level,
+                location_id=location_id
+            )
+            statistic.save()
