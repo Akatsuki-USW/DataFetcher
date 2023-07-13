@@ -7,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         today = date.today()
-        yesterday = today - timedelta(days=6)
+        yesterday = today - timedelta(days=3)
 
         congestion_data = Congestion.objects.filter(observed_at__date=yesterday)
 

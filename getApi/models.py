@@ -12,12 +12,11 @@ class LocationCategory(models.Model):
 
 class Location(models.Model):
     location_id = models.BigAutoField(primary_key=True)
-    created_at = models.CharField(max_length=255, blank=True, null=True)
-    updated_at = models.CharField(max_length=255, blank=True, null=True)
-    api_id = models.BigIntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    api_id = models.IntegerField()
     name = models.CharField(max_length=255, blank=True, null=True)
     location_category_id = models.ForeignKey(LocationCategory, on_delete=models.SET_NULL, null=True, blank=True, db_column='location_category_id')
-
 
     class Meta:
         managed = False
@@ -31,8 +30,10 @@ class Congestion(models.Model):
         ]
 
         congestion_id = models.BigAutoField(primary_key=True)
+        created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+        updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
         congestion_level = models.IntegerField(choices=CONGESTION_LEVEL_CHOICES, blank=True, null=True)
-        observed_at = models.DateTimeField(blank=True, null=True)
+        observed_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
         location = models.ForeignKey('Location', models.DO_NOTHING)
 
         class Meta:
@@ -52,20 +53,23 @@ class CongestionStatics(models.Model):
         db_table = 'congestion_statics'
 
 class DailyCongestionStatistic(models.Model):
-    congestion_statistic_id = models.BigAutoField(primary_key=True)
+    daily_congestion_statistic_id = models.BigAutoField(primary_key=True) # 이름변경됨.
+    created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     content = models.JSONField(blank=True, null=True)
-    location = models.ForeignKey('Location', models.DO_NOTHING, blank=True, null=True)
+    location = models.ForeignKey('Location', models.DO_NOTHING)
+
 
     class Meta:
         managed = False
         db_table = 'daily_congestion_statistic'
 
 class WeeklyCongestionStatistic(models.Model):
-    congestion_statistic_id = models.BigAutoField(primary_key=True)
-    created_at = models.CharField(max_length=255, blank=True, null=True)
-    updated_at = models.CharField(max_length=255, blank=True, null=True)
-    congestion_level = models.SmallIntegerField(blank=True, null=True)
-    location = models.ForeignKey(Location, models.DO_NOTHING, blank=True, null=True)
+    weekly_congestion_statistic_id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+    average_congestion_level = models.FloatField(blank=True, null=True)
+    location = models.ForeignKey(Location, models.DO_NOTHING)
 
     class Meta:
         managed = False
