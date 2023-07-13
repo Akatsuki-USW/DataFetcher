@@ -17,7 +17,7 @@ class Command(BaseCommand):
         trigger1 = CronTrigger(minute="21", hour="9-23")
         scheduler.add_job(congestion_fetch, trigger1)
 
-        trigger2 = CronTrigger(minute="30", hour="0", day_of_week="mon")
+        trigger2 = CronTrigger(minute="30", hour="0")
         scheduler.add_job(daily_congestion_statistic, trigger2)
 
         scheduler.start()
