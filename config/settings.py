@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import secrets
+import pymysql
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,6 +85,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+pymysql.install_as_MySQLdb()
 DATABASES = {
             'default': {
                 # django db를 mysql로 사용하겠음
@@ -98,6 +100,9 @@ DATABASES = {
                 'HOST': 'database-2.chztdnfmbefu.ap-northeast-2.rds.amazonaws.com',
                 # MySQL default 포트 번호
                 'PORT': '3306',
+                'OPTIONS': {
+                            'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'
+                        }
             }
         }
 
