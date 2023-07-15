@@ -29,6 +29,9 @@ class Command(BaseCommand):
         trigger3 = CronTrigger(minute="30", hour="0", day_of_week="mon")
         scheduler.add_job(weekly_congestion_statisti, trigger3)
 
+        trigger4 = CronTrigger(minute="21", hour="9-23")
+        scheduler.add_job(sk_congestion_fetch, trigger4)
+
         scheduler.start()
         self.stdout.write(self.style.SUCCESS('스케줄러 시작'))
 
