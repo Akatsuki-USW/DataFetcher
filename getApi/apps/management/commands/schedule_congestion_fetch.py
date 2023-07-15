@@ -12,6 +12,9 @@ def daily_congestion_statistic():
 def weekly_congestion_statisti():
     os.system('python3 manage.py weekly_congestion_statistic')
 
+def sk_congestion_fetch():
+    os.system('python3 manage.py sk_congestion_fetch')
+
 class Command(BaseCommand):
     help = 'Runs a scheduler to fetch congestion data'
 

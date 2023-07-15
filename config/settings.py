@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-
 import secrets
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secrets.Django_SECRET_KEY
+SECRET_KEY = 'django-insecure-xb4(wu8nui7c8480a$!avnvd&f7+6w1_(653z_hj!!71xpc&(t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,8 +84,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+DATABASES = {
+            'default': {
+                # django db를 mysql로 사용하겠음
+                'ENGINE': 'django.db.backends.mysql',
+                # DB 이름 지어주기
+                'NAME': 'awsbokjak',
+                # 사용자 유저 계정 생성 후 입력하기
+                'USER': 'admin',
+                # 사용자 비밀번호 생성 후 입력하기
+                'PASSWORD': 'Wnlehd1106~',
+                # default host인 localhost
+                'HOST': 'database-2.chztdnfmbefu.ap-northeast-2.rds.amazonaws.com',
+                # MySQL default 포트 번호
+                'PORT': '3306',
+            }
+        }
 
-DATABASES = secrets.secretsDB
 
 
 # Password validation
