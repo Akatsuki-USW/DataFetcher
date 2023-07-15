@@ -22,30 +22,32 @@ class Command(BaseCommand):
         for location_data in sk_location_name_data['contents']:
             poi_name = location_data['poiName']
             poiId = location_data['poiId']
-            print(poi_name)
-            print(poiId)
 
-            # sk는 api2로함. 카테고리는 sql에서 수정해야해서 디폴드2
+            if poi_name in ['에버랜드','국립중앙박물관','서울랜드','동대문종합시장','롯데월드어드벤쳐']:
+                print(poi_name)
+                print(poiId)
 
-            location_category_id = 2
+                # sk는 api2로함. 카테고리는 sql에서 수정해야해서 디폴드2
 
-            updated_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                location_category_id = 2
 
-            # LocationCategory 모델에서 해당 location_category_id로 인스턴스를 가져옴
-            location_category = LocationCategory.objects.get(
-                location_category_id=location_category_id
-            )
+                updated_at = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-            _, created = Location.objects.update_or_create(
-                name=poi_name,
-                defaults={
-                    'name': poi_name,
-                    'api_id': poiId,
-                    'updated_at': updated_at,
-                    'created_at': updated_at,
-                    'location_category_id': location_category  # 이 부분을 location_category로 수정
-                }
-            )
+                # LocationCategory 모델에서 해당 location_category_id로 인스턴스를 가져옴
+                location_category = LocationCategory.objects.get(
+                    location_category_id=location_category_id
+                )
+
+                _, created = Location.objects.update_or_create(
+                    name=poi_name,
+                    defaults={
+                        'name': poi_name,
+                        'api_id': poiId,
+                        'updated_at': updated_at,
+                        'created_at': updated_at,
+                        'location_category_id': location_category  # 이 부분을 location_category로 수정
+                    }
+                )
             #Json파일 추출하기위함.
             # location_data_list.append({
             #     'name': poi_name,

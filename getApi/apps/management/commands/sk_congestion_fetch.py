@@ -15,14 +15,14 @@ class Command(BaseCommand):
 
         def get_level_mapping(congestion_level):
             if 1 <= congestion_level <= 3:
-                return 'RELEX'
+                return 1
             elif 4 <= congestion_level <= 6:
-                return 'NORMAL'
+                return 2
             elif 7 <= congestion_level <= 9:
-                return 'BUZZ'
+                return 3
 
         #객체 가져오기
-        locations = Location.objects.all()
+        locations = Location.objects.filter(api_id__gte=10000)
 
         #Location에서 api_id 값을 사용하여 SK API를 호출
         for location in locations:
@@ -45,7 +45,7 @@ class Command(BaseCommand):
                             observed_at = datetime.datetime.strptime(observed_at, '%Y%m%d%H%M%S')
 
                             # Congestion 생성하거나 업데이트
-                            _, created = Congestion.objects.update_or_create(
+                            _, created = Congestion.objects.create(
                                 location_id=location.pk,
                                 observed_at=observed_at,
                                 defaults={
