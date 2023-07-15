@@ -1,5 +1,7 @@
 import requests
 from django.core.management import BaseCommand
+
+import secrets
 from getApi.models import Location, Congestion
 import datetime
 
@@ -10,7 +12,7 @@ class Command(BaseCommand):
         base_url = "https://apis.openapi.sk.com/puzzle/congestion/rltm/pois"
         headers = {
             "accept": "application/json",
-            "appkey": "KQvy4uZEmI6dMMXosdQwZ8iUdvg4STIR74FxzDcg"
+            "appkey": secrets.SK_API_KEY
         }
 
         def get_level_mapping(congestion_level):
@@ -21,10 +23,10 @@ class Command(BaseCommand):
             elif 7 <= congestion_level <= 9:
                 return 3
 
-        #객체 가져오기
+        # 객체 가져오기
         locations = Location.objects.filter(api_id__gte=10000)
 
-        #Location에서 api_id 값을 사용하여 SK API를 호출
+        # Location에서 api_id 값을 사용하여 SK API를 호출
         for location in locations:
             poiId = location.api_id
 
@@ -45,13 +47,13 @@ class Command(BaseCommand):
                             observed_at = datetime.datetime.strptime(observed_at, '%Y%m%d%H%M%S')
 
                             # Congestion 생성하거나 업데이트
-                            _, created = Congestion.objects.create(
+                            congestion = Congestion(
                                 location_id=location.pk,
                                 observed_at=observed_at,
-                                defaults={
-                                    'congestion_level': get_level_mapping(congestion_level)
-                                }
+                                congestion_level=get_level_mapping(congestion_level)
                             )
+                            congestion.save()
+
                             print(f"Location {location.name}: CongestionLevel {congestion_level} updated.")
                     else:
                         print(f"Error with SK API: {sk_congestion_data['status']['message']}")
@@ -59,4 +61,3 @@ class Command(BaseCommand):
                     print(f"Unexpected JSON format (KeyError): {e}")
                 except Exception as e:
                     print(f"Unexpected error: {e}")
-
