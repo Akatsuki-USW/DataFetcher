@@ -9,6 +9,9 @@ def congestion_fetch():
 def daily_congestion_statistic():
     os.system('python3 manage.py daily_congestion_statistic')
 
+def weekly_congestion_statisti():
+    os.system('python3 manage.py weekly_congestion_statistic')
+
 class Command(BaseCommand):
     help = 'Runs a scheduler to fetch congestion data'
 
@@ -19,6 +22,9 @@ class Command(BaseCommand):
 
         trigger2 = CronTrigger(minute="30", hour="0")
         scheduler.add_job(daily_congestion_statistic, trigger2)
+
+        trigger3 = CronTrigger(minute="30", hour="0", day_of_week="mon")
+        scheduler.add_job(weekly_congestion_statisti, trigger3)
 
         scheduler.start()
         self.stdout.write(self.style.SUCCESS('스케줄러 시작'))
