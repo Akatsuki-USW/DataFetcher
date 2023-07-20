@@ -148,3 +148,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRONJOBS = [
+    ('21 9-23 * * *', 'getApi.management.commands.congestion_fetch'),
+    ('30 0 * * *', 'getApi.management.commands.daily_congestion_statistic'),
+    ('30 0 * * mon', 'getApi.management.commands.weekly_congestion_statisti'),
+    ('21 9-23 * * *', 'getApi.management.commands.sk_congestion_fetch'),
+]
+
