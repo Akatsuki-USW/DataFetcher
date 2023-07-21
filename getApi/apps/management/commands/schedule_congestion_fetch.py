@@ -14,10 +14,10 @@ class Command(BaseCommand):
         scheduler = BackgroundScheduler()
 
         jobs = [
-            {"function": "congestion_fetch", "minute": "21", "hour": "9-23"},
+            {"function": "congestion_fetch", "minute": "21", "hour": "0-23"},
             {"function": "daily_congestion_statistic", "minute": "30", "hour": "0"},
             {"function": "weekly_congestion_statisti", "minute": "30", "hour": "0", "day_of_week": "mon"},
-            {"function": "sk_congestion_fetch", "minute": "21", "hour": "9-23"}
+            {"function": "sk_congestion_fetch", "minute": "21", "hour": "0-23"}
         ]
 
         for job in jobs:
