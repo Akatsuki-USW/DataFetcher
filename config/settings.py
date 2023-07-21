@@ -48,9 +48,6 @@ INSTALLED_APPS = [
     'django_crontab',
 ]
 
-CRONJOBS = [
-    ('*/5 * * * *', 'api_server.getApi.apps.management.commands.congestion_fetch.Command', '>> /tmp/cron.log')
-]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -150,9 +147,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('21 9-23 * * *', 'getApi.management.commands.congestion_fetch'),
-    ('30 0 * * *', 'getApi.management.commands.daily_congestion_statistic'),
-    ('30 0 * * mon', 'getApi.management.commands.weekly_congestion_statisti'),
-    ('21 9-23 * * *', 'getApi.management.commands.sk_congestion_fetch'),
+    ('21 9-23 * * *', 'getApi.apps.management.commands.congestion_fetch'),
+    ('30 0 * * *', 'getApi.apps.management.commands.daily_congestion_statistic'),
+    ('30 0 * * mon', 'getApi.apps.management.commands.weekly_congestion_statistic'),
+    ('21 9-23 * * *', 'getApi.apps.management.commands.sk_congestion_fetch'),
 ]
 
