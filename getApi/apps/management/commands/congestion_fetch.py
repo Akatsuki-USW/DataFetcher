@@ -1,9 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
-
 from django.core.management.base import BaseCommand
 import requests
 import xmltodict
-
 import secrets
 from getApi.models import Location
 from getApi.apps import congestion_convert, realtime_convert
@@ -77,6 +75,9 @@ class Command(BaseCommand):
 
         with ThreadPoolExecutor(max_workers=5) as executor:
             realtime_congestions = list(executor.map(get_data, pk_values))
+
+        # ThreadPoolExecutor 사용 완료 후에 shutdown 호출
+        executor.shutdown(wait=True)
 
         #print(realtime_congestions)
 

@@ -14,21 +14,27 @@ class Command(BaseCommand):
         scheduler = BackgroundScheduler()
 
         jobs = [
-            {"function": "congestion_fetch", "minute": "21", "hour": "0-23"},
+            {"function": "congestion_fetch", "minute": "20", "hour": "*"},
             {"function": "daily_congestion_statistic", "minute": "30", "hour": "0"},
-            {"function": "weekly_congestion_statisti", "minute": "30", "hour": "0", "day_of_week": "mon"},
-            {"function": "sk_congestion_fetch", "minute": "21", "hour": "0-23"}
+            {"function": "weekly_congestion_statistic", "minute": "30", "hour": "0", "day_of_week": "mon"},
+            {"function": "sk_congestion_fetch", "minute": "18", "hour": "*"}
         ]
 
         for job in jobs:
             trigger = CronTrigger(**{key: job.get(key) for key in ['minute', 'hour', 'day_of_week'] if job.get(key)})
             scheduler.add_job(run_management_command, trigger, kwargs={"command_name": job["function"]})
 
-        scheduler.start()
-        self.stdout.write(self.style.SUCCESS('스케줄러 시작'))
+        def run_scheduler():
+            scheduler.start()
+            try:
+                while True:
+                    pass
+            except (KeyboardInterrupt, SystemExit):
+                scheduler.shutdown()
 
-        try:
-            threading.Event().wait()
-        except KeyboardInterrupt:
-            scheduler.shutdown()
-            self.stdout.write(self.style.SUCCESS('스케줄러 끝'))
+        # 스케줄러가 실행 중이지 않을 때만 스케줄러 실행
+        if not scheduler.running:
+            thread = threading.Thread(target=run_scheduler)
+            thread.start()
+
+        self.stdout.write(self.style.SUCCESS('스케줄러 시작'))

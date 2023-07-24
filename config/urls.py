@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from getApi import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
+    path('scheduler_status', views.scheduler_status, name='scheduler_status'),
 ]
+
+from scheduler import scheduler
+
+
+
