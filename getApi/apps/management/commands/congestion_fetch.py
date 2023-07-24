@@ -83,3 +83,5 @@ class Command(BaseCommand):
 
         realtime_converter = realtime_convert.ConvertCongestionData(realtime_congestions)
         realtime_converter.handle()
+
+

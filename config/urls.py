@@ -23,7 +23,7 @@ urlpatterns = [
     path('scheduler_status', views.scheduler_status, name='scheduler_status'),
 ]
 
-from scheduler import scheduler
+
 
 
 
