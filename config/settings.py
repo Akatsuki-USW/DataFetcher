@@ -14,6 +14,7 @@ from pathlib import Path
 import secrets
 import pymysql
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,12 +23,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xb4(wu8nui7c8480a$!avnvd&f7+6w1_(653z_hj!!71xpc&(t'
+SECRET_KEY = secrets.Django_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
 
 
 # Application definition
@@ -92,7 +107,7 @@ DATABASES = {
                 # 사용자 유저 계정 생성 후 입력하기
                 'USER': 'admin',
                 # 사용자 비밀번호 생성 후 입력하기
-                'PASSWORD': 'Wnlehd1106~',
+                'PASSWORD': secrets.DB_password,
                 # default host인 localhost
                 'HOST': 'database-2.chztdnfmbefu.ap-northeast-2.rds.amazonaws.com',
                 # MySQL default 포트 번호
@@ -146,10 +161,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRONJOBS = [
-    ('21 9-23 * * *', 'getApi.apps.management.commands.congestion_fetch'),
-    ('30 0 * * *', 'getApi.apps.management.commands.daily_congestion_statistic'),
-    ('30 0 * * mon', 'getApi.apps.management.commands.weekly_congestion_statistic'),
-    ('21 9-23 * * *', 'getApi.apps.management.commands.sk_congestion_fetch'),
-]
+# CRONJOBS = [
+#     ('21 9-23 * * *', 'getApi.apps.management.commands.congestion_fetch'),
+#     ('30 0 * * *', 'getApi.apps.management.commands.daily_congestion_statistic'),
+#     ('30 0 * * mon', 'getApi.apps.management.commands.weekly_congestion_statistic'),
+#     ('21 9-23 * * *', 'getApi.apps.management.commands.sk_congestion_fetch'),
+# ]
 
