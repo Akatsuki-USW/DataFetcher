@@ -1,0 +1,17 @@
+<!-- scheduler_status.html -->
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>get_api</title>
+</head>
+<body>
+    <h1>스케줄러 상태</h1>
+    <ul>
+        {% for job in jobs %}
+        <li>{{ job }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
