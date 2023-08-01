@@ -16,11 +16,11 @@ class Command(BaseCommand):
         }
 
         def get_level_mapping(congestion_level):
-            if 1 <= congestion_level <= 3:
+            if 1 <= congestion_level <= 2:
                 return 1
-            elif 4 <= congestion_level <= 6:
+            elif 3 <= congestion_level <= 4:
                 return 2
-            elif 7 <= congestion_level <= 9:
+            elif 5 <= congestion_level <= 9:
                 return 3
 
         # sk는 돈을 지불해야 하니, location에 sk데이터중 가지고 오고싶은 api_id를 적기. 돈 문제라 수작업.
