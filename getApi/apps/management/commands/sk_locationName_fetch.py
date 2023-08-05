@@ -3,7 +3,7 @@ from django.core.management import BaseCommand
 from getApi.models import Location, LocationCategory
 import datetime
 import json
-import pandas as pd
+
 
 class Command(BaseCommand):
     help = "sk_locationName_fetch"
@@ -23,7 +23,7 @@ class Command(BaseCommand):
             poi_name = location_data['poiName']
             poiId = location_data['poiId']
 
-            if poi_name in ['에버랜드','국립중앙박물관','서울랜드','동대문종합시장','롯데월드어드벤쳐']:
+            if poi_name in ['에버랜드','서울랜드','롯데월드어드벤쳐']:
                 print(poi_name)
                 print(poiId)
 
