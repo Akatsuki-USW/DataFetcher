@@ -55,7 +55,6 @@ class CongestionStatics(models.Model):
 class DailyCongestionStatistic(models.Model):
     daily_congestion_statistic_id = models.BigAutoField(primary_key=True) # 이름변경됨.
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     content = models.JSONField(blank=True, null=True)
     location = models.ForeignKey('Location', models.DO_NOTHING)
 
@@ -67,7 +66,6 @@ class DailyCongestionStatistic(models.Model):
 class WeeklyCongestionStatistic(models.Model):
     weekly_congestion_statistic_id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     average_congestion_level = models.FloatField(blank=True, null=True)
     location = models.ForeignKey(Location, models.DO_NOTHING)
 
