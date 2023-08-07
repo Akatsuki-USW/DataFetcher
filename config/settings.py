@@ -148,7 +148,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = False # db저장시 서울시간대로 하려면 False로 해야함.
+USE_TZ = True # db저장시 서울시간대로 하려면 False로 해야함.
 
 
 # Static files (CSS, JavaScript, Images)
