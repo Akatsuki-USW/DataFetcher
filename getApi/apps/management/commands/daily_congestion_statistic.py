@@ -9,34 +9,30 @@ class Command(BaseCommand):
         today = date.today()
         yesterday = today - timedelta(days=1)
 
-        congestion_data = Congestion.objects.filter(observed_at__date=yesterday)
+        unique_location_ids = Congestion.objects.filter(observed_at__date=yesterday).values_list('location_id', flat=True).distinct()
 
-        for congestion in congestion_data:
-            location_id = congestion.location_id
-            observed_date = congestion.observed_at.strftime("%Y-%m-%d")
-            observed_time = congestion.observed_at.strftime("%H")
-            congestion_level = congestion.congestion_level
+        for location_id in unique_location_ids:
+            congestion_data = Congestion.objects.filter(observed_at__date=yesterday, location_id=location_id)
+            statistics = []
 
-            statistics = [
-                {
+            for congestion in congestion_data:
+                observed_date = congestion.observed_at.strftime("%Y-%m-%d")
+                observed_time = congestion.observed_at.strftime("%H")
+                congestion_level = congestion.congestion_level
+
+                statistics.append({
                     "time": int(observed_time),
                     "congestionLevel": congestion_level
-                }
-            ]
+                })
 
-            # 이미 존재하는 DailyCongestionStatistic 레코드를 가져옵니다.
-            statistic = DailyCongestionStatistic.objects.filter(location_id=location_id, content__observedDate=observed_date).first()
+            statistic = DailyCongestionStatistic.objects.filter(location_id=location_id).first()
 
             if statistic is None:
                 statistic = DailyCongestionStatistic.objects.create(
                     location_id=location_id,
-                    content={
-                        "id": location_id,
-                        "observedDate": observed_date,
-                        "statistics": statistics
-                    }
+                    content={"statistics": statistics}
                 )
             else:
-                statistic.content["statistics"] += statistics
+                statistic.content["statistics"] = statistics
 
             statistic.save()
