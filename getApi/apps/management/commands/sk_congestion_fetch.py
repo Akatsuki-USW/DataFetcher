@@ -1,7 +1,7 @@
 import requests
 from django.core.management import BaseCommand
 
-import secrets
+import django_secrets
 from getApi.models import Location, Congestion
 import datetime
 
@@ -12,7 +12,7 @@ class Command(BaseCommand):
         base_url = "https://apis.openapi.sk.com/puzzle/congestion/rltm/pois"
         headers = {
             "accept": "application/json",
-            "appkey": secrets.SK_API_KEY
+            "appkey": django_secrets.SK_API_KEY
         }
 
         def get_level_mapping(congestion_level):

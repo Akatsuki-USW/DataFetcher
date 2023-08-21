@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import secrets
+import django_secrets
 import pymysql
 
 
@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = secrets.Django_SECRET_KEY
+SECRET_KEY = django_secrets.Django_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -61,6 +61,7 @@ INSTALLED_APPS = [
 
     #스케줄러
     'django_crontab',
+    'buzzing_admin',
 ]
 
 
@@ -107,9 +108,9 @@ DATABASES = {
                 # 사용자 유저 계정 생성 후 입력하기
                 'USER': 'admin',
                 # 사용자 비밀번호 생성 후 입력하기
-                'PASSWORD': secrets.DB_password,
+                'PASSWORD': django_secrets.DB_password,
                 # default host인 localhost
-                'HOST': 'youngdoo.cgfocikgphnv.ap-southeast-2.rds.amazonaws.com',
+                'HOST': 'bokjak.cammfpqoxsrt.ap-northeast-2.rds.amazonaws.com',
                 # MySQL default 포트 번호
                 'PORT': '3306',
                 'OPTIONS': {
@@ -148,7 +149,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True # db저장시 서울시간대로 하려면 False로 해야함.
+USE_TZ = False # db저장시 서울시간대로 하려면 False로 해야함.
 
 
 # Static files (CSS, JavaScript, Images)

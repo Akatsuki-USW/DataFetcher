@@ -2,7 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from django.core.management.base import BaseCommand
 import requests
 import xmltodict
-import secrets
+import django_secrets
 from getApi.models import Location
 from getApi.apps import congestion_convert, realtime_convert
 from django.utils.dateparse import parse_datetime
@@ -10,7 +10,7 @@ from django.utils.dateparse import parse_datetime
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        apikey = secrets.API_KEY
+        apikey = django_secrets.API_KEY
         pk_values = ['강남 MICE 관광특구', '동대문 관광특구', '명동 관광특구', '이태원 관광특구', '잠실 관광특구', '종로·청계 관광특구',
                      '홍대 관광특구', '광화문·덕수궁', '보신각', '서울 암사동 유적', '창덕궁·종묘', '가산디지털단지역', '강남역', '건대입구역',
                      '고덕역', '고속터미널역', '교대역', '구로디지털단지역', '구로역', '군자역', '남구로역', '대림역', '동대문역', '뚝섬역',
