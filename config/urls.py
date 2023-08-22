@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from getApi import views
+from buzzing_admin import admin_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('scheduler_status', views.scheduler_status, name='scheduler_status'),
+    path('scheduler_status/', views.scheduler_status, name='scheduler_status'),
+    path('auth/login/admin/', admin_views.AdminLoginView.as_view()),
 ]
 
 
