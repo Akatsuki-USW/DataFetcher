@@ -1,20 +1,14 @@
 from django.views import View
 from django.http import JsonResponse
-<<<<<<< HEAD
 from .models import Users, Report, Ban
-=======
 from .models import Users
->>>>>>> origin/main
 import jwt
 import bcrypt
 from django_secrets import JWT_SECRET_KEY, ALGORITHM
 import json
 from django.views.decorators.csrf import csrf_exempt #csrf token 비활성화
 from django.utils.decorators import method_decorator  #csrf token 비활성화
-<<<<<<< HEAD
 from utils import authorization
-=======
->>>>>>> origin/main
 
 @method_decorator(csrf_exempt, name='dispatch')  #csrf token 비활성화
 class AdminLoginView(View):
@@ -41,7 +35,6 @@ class AdminLoginView(View):
 
         except Users.DoesNotExist:
             return JsonResponse({'message': 'INVALID_USER'}, status=401)
-<<<<<<< HEAD
 
 @method_decorator(csrf_exempt, name='dispatch')  #csrf token 비활성화
 class AdminMainView(View):
@@ -55,5 +48,3 @@ class AdminMainView(View):
             'reported_count': reported_count,
             'banned_users_count': banned_users_count
         }, status=200)
-=======
->>>>>>> origin/main
