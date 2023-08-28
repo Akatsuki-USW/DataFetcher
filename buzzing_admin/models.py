@@ -51,3 +51,14 @@ class Report(models.Model):
         managed = False
         db_table = 'report'
 
+class BlackList(models.Model):
+    black_list_id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    ban_ended_at = models.DateTimeField(blank=True, null=True)
+    ban_started_at = models.DateTimeField(blank=True, null=True)
+    social_email = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'black_list'
