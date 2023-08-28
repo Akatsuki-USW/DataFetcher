@@ -26,7 +26,7 @@ class Ban(models.Model):
     ban_ended_at = models.DateTimeField(blank=True, null=True)
     ban_started_at = models.DateTimeField(blank=True, null=True)
     content = models.CharField(max_length=300, blank=True, null=True)
-    is_banned = models.TextField(blank=True, null=True)  # This field type is a guess.
+    is_banned = models.TextField(blank=True, null=True)
     title = models.CharField(max_length=50, blank=True, null=True)
     banned_user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
 
@@ -45,7 +45,7 @@ class Report(models.Model):
     ban = models.ForeignKey(Ban, models.DO_NOTHING, blank=True, null=True)
     reported_user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
     reporter_user = models.ForeignKey('Users', models.DO_NOTHING, related_name='report_reporter_user_set', blank=True, null=True)
-    ischecked = models.TextField(blank=True, null=True)  # This field type is a guess.
+    ischecked = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False

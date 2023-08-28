@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('scheduler_status/', views.scheduler_status, name='scheduler_status'),
     path('auth/login/admin/', admin_views.AdminLoginView.as_view()),
+    path('auth/admin/main/', admin_views.AdminMainView.as_view()),
 ]
 
 
