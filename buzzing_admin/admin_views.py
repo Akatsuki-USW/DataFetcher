@@ -75,6 +75,11 @@ class ReportDetailView(View):
     def post(self, request, report_id):
         report = get_object_or_404(Report, report_id=report_id)
 
+        if Ban.objects.filter(banned_user=report.reported_user).exists():
+            return JsonResponse({"message": "유저가 이미 밴 상태입니다.."}, status=400)
+        if BlackList.objects.filter(
+                social_email=hashlib.sha256(report.reported_user.social_email.encode()).hexdigest()).exists():
+            return JsonResponse({"message": "유저가 이미 블랙리스트 상태입니다."}, status=400)
         # JSON 데이터를 파싱
         data = json.loads(request.body)
         action = data.get('action')
