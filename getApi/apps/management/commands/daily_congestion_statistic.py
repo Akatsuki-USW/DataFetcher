@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 from django.core.management import BaseCommand
 from getApi.models import Congestion, DailyCongestionStatistic
+from django.db.models import Avg
+
+
 
 class Command(BaseCommand):
     help = "daily_congestion_statistic.py"
@@ -10,22 +13,27 @@ class Command(BaseCommand):
         yesterday = today - timedelta(days=1)
         yesterday_date = yesterday.date()
 
-        unique_location_ids = Congestion.objects.filter(observed_at__date=yesterday_date).values_list('location_id', flat=True).distinct()
+        unique_location_ids = Congestion.objects.filter(observed_at__date=yesterday_date).values_list('location_id',
+                                                                                                      flat=True).distinct()
 
         for location_id in unique_location_ids:
-            congestion_data = Congestion.objects.filter(observed_at__date=yesterday_date, location_id=location_id)
+            hourly_averages = {}
+            for hour in range(24):
+                hour_start = datetime(yesterday.year, yesterday.month, yesterday.day, hour, 0)
+                hour_end = datetime(yesterday.year, yesterday.month, yesterday.day, hour, 59, 59)
 
-            statistics = []
+                hourly_data = Congestion.objects.filter(
+                    observed_at__range=(hour_start, hour_end),
+                    location_id=location_id
+                )
 
-            for congestion in congestion_data:
-                observed_time = congestion.observed_at.strftime("%H")
-                congestion_level = congestion.congestion_level
-                print(f"Observed time: {observed_time}")  # 문제확인.
+                # 평균 계산
+                if hourly_data.exists():
+                    avg_congestion = hourly_data.aggregate(Avg('congestion_level'))['congestion_level__avg']
+                    hourly_averages[hour] = round(avg_congestion)
 
-                statistics.append({
-                    "time": int(observed_time),
-                    "congestionLevel": congestion_level
-                })
+            statistics = [{"time": hour, "congestionLevel": congestion_level} for hour, congestion_level in
+                          hourly_averages.items()]
 
             print(statistics)
 
@@ -34,5 +42,4 @@ class Command(BaseCommand):
                 content={"statistics": statistics}
             )
 
-            #statistic.save()
-
+            statistic.save()

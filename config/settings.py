@@ -163,7 +163,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('20 * * * *', 'django.core.management.call_command', ['congestion_fetch']),
+    ('*/5 * * * *', 'django.core.management.call_command', ['congestion_fetch']),
     ('30 0 * * *', 'django.core.management.call_command', ['daily_congestion_statistic']),
     ('30 0 * * 1', 'django.core.management.call_command', ['weekly_congestion_statistic']),
     ('18 * * * *', 'django.core.management.call_command', ['sk_congestion_fetch']),
