@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = "sk_congestion_fetch"
 
     def handle(self, *args, **options):
-        base_url = "https://apis.openapi.sk.com/puzzle/congestion/rltm/pois"
+        base_url = "https://apis.openapi.sk.com/puzzle/place/congestion/rltm/pois"
         headers = {
             "accept": "application/json",
             "appkey": django_secrets.SK_API_KEY
@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 return 3
 
         # sk는 돈을 지불해야 하니, location에 sk데이터중 가지고 오고싶은 api_id를 적기. 돈 문제라 수작업.
-        allowed_api_ids = [387701,6967166,192300]
+        allowed_api_ids = [387701,6967166,192300]#에버랜드, 서울랜드, 롯데월드 순.
 
         locations = Location.objects.filter(api_id__in=allowed_api_ids)
 
@@ -48,7 +48,6 @@ class Command(BaseCommand):
                             observed_at = rltm['datetime']
                             observed_at = datetime.datetime.strptime(observed_at, '%Y%m%d%H%M%S')
 
-                            # Congestion 생성하거나 업데이트
                             congestion = Congestion(
                                 location_id=location.pk,
                                 observed_at=observed_at,
