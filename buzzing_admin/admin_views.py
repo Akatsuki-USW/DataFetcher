@@ -76,7 +76,8 @@ class AdminMainView(View):
                 'title': ban.title,
                 'banned_user_nickname': ban.banned_user.nickname,
                 'ban_started_at': ban.ban_started_at,
-                'ban_ended_at': ban.ban_ended_at
+                'ban_ended_at': ban.ban_ended_at,
+                'banned_user_id': ban.banned_user_id
             })
 
         # 블랙리스트 유저 정보 가져오기, ++++++ 밴 테이블에 블랙리스트를 추가 후 블랙리스트 하는것이기 때문에 밴만 조회하면 될듯
@@ -96,6 +97,26 @@ class AdminMainView(View):
             #'blacklisted_users': blacklist_data
         }, status=200)
 
+@method_decorator(csrf_exempt, name='dispatch')
+class UnbanUserView(View):
+    @authorization
+    def post(self, request, user_id):
+        try:
+            ban_data = Ban.objects.get(banned_user_id=user_id, is_banned=1)
+
+            ban_data.is_banned = None
+            ban_data.save()
+
+            user = Users.objects.get(pk=user_id)
+            user.user_status = "NORMAL"
+            user.save()
+
+            return JsonResponse({"message": "유저 정지 해제 완료."}, status=200)
+
+        except Ban.DoesNotExist:
+            return JsonResponse({"message": "밴 데이터가 없습니다."}, status=400)
+        except Users.DoesNotExist:
+            return JsonResponse({"message": "해당 유저가 존재하지 않습니다."}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReportDetailView(View):

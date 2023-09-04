@@ -25,6 +25,7 @@ urlpatterns = [
     path('auth/login/admin/', admin_views.AdminLoginView.as_view()),
     path('auth/admin/main/', admin_views.AdminMainView.as_view()),
     path('auth/admin/report/<int:report_id>/', admin_views.ReportDetailView.as_view()),
+    path('auth/admin/report/<int:user_id>/unBan/', admin_views.UnbanUserView.as_view(), name='unBan'),
 ]
 
 
