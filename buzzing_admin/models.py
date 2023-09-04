@@ -1,4 +1,5 @@
 from django.db import models
+from getApi.models import Location
 
 class Users(models.Model):
     user_id = models.BigAutoField(primary_key=True)
@@ -62,3 +63,41 @@ class BlackList(models.Model):
     class Meta:
         managed = False
         db_table = 'black_list'
+
+class Spot(models.Model):
+    spot_id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    address = models.CharField(max_length=500, blank=True, null=True)
+    content = models.CharField(max_length=1500)
+    road_name_address = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=50)
+    location = models.ForeignKey(Location, models.DO_NOTHING)
+    spot_category = models.ForeignKey('SpotCategory', models.DO_NOTHING)
+    user = models.ForeignKey('Users', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'spot'
+
+class Comment(models.Model):
+    comment_id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    content = models.CharField(max_length=300)
+    presence = models.TextField()  # This field type is a guess.
+    parent_comment = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    spot = models.ForeignKey('Spot', models.DO_NOTHING)
+    user = models.ForeignKey('Users', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'comment'
+
+class SpotCategory(models.Model):
+    spot_category_id = models.BigAutoField(primary_key=True)
+    name = models.CharField(max_length=45)
+
+    class Meta:
+        managed = False
+        db_table = 'spot_category'

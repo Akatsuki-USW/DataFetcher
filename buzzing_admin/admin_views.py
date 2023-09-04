@@ -1,8 +1,7 @@
 import hashlib
 from django.views import View
 from django.http import JsonResponse
-from .models import Users, Report, Ban, BlackList
-from .models import Users
+from .models import Users, Report, Ban, BlackList,Spot,Comment
 import jwt
 import bcrypt
 from django_secrets import JWT_SECRET_KEY, ALGORITHM
@@ -41,18 +40,58 @@ class AdminLoginView(View):
         except Users.DoesNotExist:
             return JsonResponse({'message': 'INVALID_USER'}, status=401)
 
-@method_decorator(csrf_exempt, name='dispatch')  #csrf token 비활성화
+
+@method_decorator(csrf_exempt, name='dispatch')  # csrf token 비활성화
 class AdminMainView(View):
     @authorization
     def get(self, request):
-        reported_count = Report.objects.all().count()
 
-        banned_users_count = Ban.objects.filter(is_banned=True).count()
+        # 신고된 글과 댓글 정보 가져오기
+        reported_contents = Report.objects.all()
+        reported_data = []
+        for report in reported_contents:
+            content_data = {
+                'report_id': report.report_id,
+                'report_content': report.content,  # 신고 사유
+            }
+            if report.report_target == 'SPOT':
+                spot = Spot.objects.get(pk=report.target_id)
+                content_data['title'] = spot.title
+                content_data['content'] = spot.content
+            elif report.report_target == 'COMMENT':
+                comment = Comment.objects.get(pk=report.target_id)
+                content_data['content'] = comment.content
+            reported_data.append(content_data)
+
+        # 정지된 유저와 블랙리스트 유저 정보 가져오기
+        banned_users = Ban.objects.filter(is_banned=True)
+        banned_data = []
+        for ban in banned_users:
+            banned_data.append({
+                'ban_id': ban.ban_id,
+                'title': ban.title,
+                'banned_user_nickname': ban.banned_user.nickname,
+                'ban_started_at': ban.ban_started_at,
+                'ban_ended_at': ban.ban_ended_at
+            })
+
+        # 블랙리스트 유저 정보 가져오기, ++++++ 밴 테이블에 블랙리스트를 추가 후 블랙리스트 하는것이기 때문에 밴만 조회하면 될듯
+        # blacklisted_users = BlackList.objects.all()
+        # blacklist_data = []
+        # for user in blacklisted_users:
+        #     blacklist_data.append({
+        #         'black_list_id': user.black_list_id,
+        #         'ban_started_at': user.ban_started_at,
+        #         'ban_ended_at': user.ban_ended_at,
+        #         'social_email': user.social_email
+        #     })
 
         return JsonResponse({
-            'reported_count': reported_count,
-            'banned_users_count': banned_users_count
+            'reported_contents': reported_data,
+            'banned_users': banned_data,
+            #'blacklisted_users': blacklist_data
         }, status=200)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ReportDetailView(View):
@@ -62,14 +101,18 @@ class ReportDetailView(View):
         data = {
             'report_id': report.report_id,
             'created_at': report.created_at,
-            'updated_at': report.updated_at,
             'content': report.content,
-            'report_target': report.report_target,
-            'target_id': report.target_id,
-            'ban_id': report.ban.ban_id if report.ban else None,
-            'reported_user_id': report.reported_user.user_id if report.reported_user else None,
-            'reporter_user_id': report.reporter_user.user_id if report.reporter_user else None
+            'reported_user_nickname': report.reported_user.nickname if report.reported_user else None,
+            'reporter_user_nickname': report.reporter_user.nickname if report.reporter_user else None
         }
+        if report.report_target == 'SPOT':
+            spot = get_object_or_404(Spot, pk=report.target_id)
+            data['title'] = spot.title
+            data['content'] = spot.content
+            data['spot_content'] = spot.content
+        elif report.report_target == 'COMMENT':
+            comment = get_object_or_404(Comment, pk=report.target_id)
+            data['content'] = comment.content
         return JsonResponse(data, status=200)
 
     def post(self, request, report_id):
@@ -80,9 +123,10 @@ class ReportDetailView(View):
         if BlackList.objects.filter(
                 social_email=hashlib.sha256(report.reported_user.social_email.encode()).hexdigest()).exists():
             return JsonResponse({"message": "유저가 이미 블랙리스트 상태입니다."}, status=400)
-        # JSON 데이터를 파싱
         data = json.loads(request.body)
         action = data.get('action')
+        ban_reason = data.get('ban_reason')  # 정지 사유
+        ban_reason_title = data.get('ban_reason_title')  # 정지 사유 제목
 
         # is_checked를 1로
         report.is_checked = '1'
@@ -99,19 +143,31 @@ class ReportDetailView(View):
             Ban.objects.create(
                 ban_started_at=timezone.now(),
                 ban_ended_at=timezone.now() + timedelta(days=30),
-                content="30일 정지",
+                content=ban_reason,  # 정지 사유
                 is_banned='1',
-                title="30일 정지",
+                title=ban_reason_title,  # 정지 사유 제목
                 banned_user=reported_user
             )
 
-
         elif action == '블랙리스트':
+            reported_user = report.reported_user
+            reported_user.user_status = "BLACKLIST"
+            reported_user.save()
+
+            Ban.objects.create(
+                ban_started_at=timezone.now(),
+                ban_ended_at=timezone.now() + timedelta(days=365),  # 1년 정지
+                content=ban_reason,  # 정지 사유
+                is_banned='1',
+                title=ban_reason_title,  # 정지 사유 제목
+                banned_user=reported_user
+            )
+
             hashed_social_email = hashlib.sha256(report.reported_user.social_email.encode()).hexdigest()
             BlackList.objects.create(
                 ban_started_at=timezone.now(),
                 ban_ended_at=timezone.now() + timedelta(days=365),  # 1년 정지
-                social_email=hashed_social_email  # 해시된 값을 저장
+                social_email=hashed_social_email
             )
 
-        return JsonResponse({"message": "Action applied successfully."}, status=200)
+        return JsonResponse({"message": "신고 처리 완료."}, status=200)
