@@ -45,9 +45,13 @@ class AdminLoginView(View):
 class AdminMainView(View):
     @authorization
     def get(self, request):
+        #커서 페이징
+        cursor_id = request.GET.get('cursor_id')
+        if cursor_id:
+            reported_contents = Report.objects.filter(ischecked=None, report_id__gt=cursor_id).order_by('report_id')[:10]
+        else:
+            reported_contents = Report.objects.filter(ischecked=None).order_by('report_id')[:10]
 
-        # 신고된 글과 댓글 정보 가져오기
-        reported_contents = Report.objects.all()
         reported_data = []
         for report in reported_contents:
             content_data = {
