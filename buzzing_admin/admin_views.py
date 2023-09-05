@@ -154,7 +154,7 @@ class ReportDetailView(View):
         ban_reason_title = data.get('ban_reason_title')  # 정지 사유 제목
 
         # is_checked를 1로
-        report.is_checked = '1'
+        report.is_checked = 1
         report.save()
 
         if action == '무고':
@@ -164,6 +164,11 @@ class ReportDetailView(View):
             reported_user = report.reported_user
             reported_user.user_status = "BANNED"
             reported_user.save()
+            #신고처리 시 그 게시글 삭제.
+            if report.report_target == 'SPOT':
+                Spot.objects.filter(pk=report.target_id).delete()
+            elif report.report_target == 'COMMENT':
+                Comment.objects.filter(pk=report.target_id).delete()
 
             Ban.objects.create(
                 ban_started_at=timezone.now(),
@@ -178,6 +183,11 @@ class ReportDetailView(View):
             reported_user = report.reported_user
             reported_user.user_status = "BLACKLIST"
             reported_user.save()
+            #신고처리시 그 게시글 삭제
+            if report.report_target == 'SPOT':
+                Spot.objects.filter(pk=report.target_id).delete()
+            elif report.report_target == 'COMMENT':
+                Comment.objects.filter(pk=report.target_id).delete()
 
             Ban.objects.create(
                 ban_started_at=timezone.now(),
