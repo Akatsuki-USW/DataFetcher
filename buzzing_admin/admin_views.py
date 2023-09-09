@@ -48,9 +48,9 @@ class AdminMainView(View):
         #커서 페이징
         cursor_id = request.GET.get('cursor_id')
         if cursor_id:
-            reported_contents = Report.objects.filter(ischecked=None, report_id__gt=cursor_id).order_by('report_id')[:10]
+            reported_contents = Report.objects.filter(is_checked=0, report_id__gt=cursor_id).order_by('report_id')[:10]
         else:
-            reported_contents = Report.objects.filter(ischecked=None).order_by('report_id')[:10]
+            reported_contents = Report.objects.filter(is_checked=0).order_by('report_id')[:10]
 
         reported_data = []
         for report in reported_contents:

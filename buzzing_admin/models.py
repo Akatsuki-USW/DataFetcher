@@ -46,7 +46,7 @@ class Report(models.Model):
     ban = models.ForeignKey(Ban, models.DO_NOTHING, blank=True, null=True)
     reported_user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
     reporter_user = models.ForeignKey('Users', models.DO_NOTHING, related_name='report_reporter_user_set', blank=True, null=True)
-    ischecked = models.BooleanField(blank=True, null=True)
+    is_checked = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False
