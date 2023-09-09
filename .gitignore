@@ -1,5 +1,7 @@
 django_secrets.py
-doker_file
+Dokerfile
+uwsgi.ini
+logs
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 
