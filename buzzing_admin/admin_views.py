@@ -1,6 +1,14 @@
 import hashlib
-from django.views import View
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from .swagger import (
+    admin_login_view_schema,
+    admin_main_view_schema,
+    unban_user_view_schema,
+    report_detail_view_get_schema,
+    report_detail_view_post_schema
+)
 from .models import Users, Report, Ban, BlackList,Spot,Comment
 import jwt
 import bcrypt
@@ -15,34 +23,36 @@ from datetime import timedelta
 
 
 @method_decorator(csrf_exempt, name='dispatch')  #csrf token 비활성화
-class AdminLoginView(View):
+class AdminLoginView(APIView):
+    @swagger_auto_schema(**admin_login_view_schema())
     def post(self, request):
         data = json.loads(request.body)
         social_email = data.get('social_email')
         password = data.get('password')
 
         if not all([social_email, password]):
-            return JsonResponse({'message': 'INVALID_DATA'}, status=400)
+            return Response({'message': 'INVALID_DATA'}, status=400)
 
         try:
             user = Users.objects.get(social_email=social_email)
 
             if user.role != 'ROLE_ADMIN':
-                return JsonResponse({'message': 'NO_PERMISSION'}, status=403)
+                return Response({'message': 'NO_PERMISSION'}, status=403)
 
             if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
                 payload = {"user_id": user.user_id}
                 token = jwt.encode(payload, JWT_SECRET_KEY, algorithm=ALGORITHM)
-                return JsonResponse({'AccessToken': token}, status=200)
+                return Response({'AccessToken': token}, status=200)
 
-            return JsonResponse({'message': 'INVALID_USER'}, status=401)
+            return Response({'message': 'INVALID_USER'}, status=401)
 
         except Users.DoesNotExist:
-            return JsonResponse({'message': 'INVALID_USER'}, status=401)
+            return Response({'message': 'INVALID_USER'}, status=401)
 
 
 @method_decorator(csrf_exempt, name='dispatch')  # csrf token 비활성화
-class AdminMainView(View):
+class AdminMainView(APIView):
+    @swagger_auto_schema(**admin_main_view_schema())
     @authorization
     def get(self, request):
         #커서 페이징
@@ -91,14 +101,15 @@ class AdminMainView(View):
         #         'social_email': user.social_email
         #     })
 
-        return JsonResponse({
+        return Response({
             'reported_contents': reported_data,
             'banned_users': banned_data,
             #'blacklisted_users': blacklist_data
         }, status=200)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class UnbanUserView(View):
+class UnbanUserView(APIView):
+    @swagger_auto_schema(**unban_user_view_schema())
     @authorization
     def post(self, request, user_id):
         try:
@@ -111,15 +122,16 @@ class UnbanUserView(View):
             user.user_status = "NORMAL"
             user.save()
 
-            return JsonResponse({"message": "유저 정지 해제 완료."}, status=200)
+            return Response({"message": "유저 정지 해제 완료."}, status=200)
 
         except Ban.DoesNotExist:
-            return JsonResponse({"message": "밴 데이터가 없습니다."}, status=400)
+            return Response({"message": "밴 데이터가 없습니다."}, status=400)
         except Users.DoesNotExist:
-            return JsonResponse({"message": "해당 유저가 존재하지 않습니다."}, status=400)
+            return Response({"message": "해당 유저가 존재하지 않습니다."}, status=400)
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ReportDetailView(View):
+class ReportDetailView(APIView):
+    @swagger_auto_schema(**report_detail_view_get_schema())
     @authorization
     def get(self, request, report_id):
         report = get_object_or_404(Report, report_id=report_id)
@@ -138,16 +150,18 @@ class ReportDetailView(View):
         elif report.report_target == 'COMMENT':
             comment = get_object_or_404(Comment, pk=report.target_id)
             data['content'] = comment.content
-        return JsonResponse(data, status=200)
+        return Response(data, status=200)
 
+    @swagger_auto_schema(**report_detail_view_post_schema())
+    @authorization
     def post(self, request, report_id):
         report = get_object_or_404(Report, report_id=report_id)
 
         if Ban.objects.filter(banned_user=report.reported_user).exists():
-            return JsonResponse({"message": "유저가 이미 밴 상태입니다.."}, status=400)
+            return Response({"message": "유저가 이미 밴 상태입니다.."}, status=400)
         if BlackList.objects.filter(
                 social_email=hashlib.sha256(report.reported_user.social_email.encode()).hexdigest()).exists():
-            return JsonResponse({"message": "유저가 이미 블랙리스트 상태입니다."}, status=400)
+            return Response({"message": "유저가 이미 블랙리스트 상태입니다."}, status=400)
         data = json.loads(request.body)
         action = data.get('action')
         ban_reason = data.get('ban_reason')  # 정지 사유
@@ -205,4 +219,4 @@ class ReportDetailView(View):
                 social_email=hashed_social_email
             )
 
-        return JsonResponse({"message": "신고 처리 완료."}, status=200)
+        return Response({"message": "신고 처리 완료."}, status=200)
