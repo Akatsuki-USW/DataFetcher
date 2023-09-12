@@ -62,7 +62,39 @@ INSTALLED_APPS = [
     #스케줄러
     'django_crontab',
     'buzzing_admin',
+
+    #swagger
+    'drf_yasg',
+    'rest_framework',
 ]
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'buzzing_admin.swagger.BearerTokenAutoSchema',
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'DEFAULT_SECURITY': [
+        {
+            'Bearer': []
+        }
+    ],
+
+    'USE_SESSION_AUTH': False,
+
+    'DEFAULT_FIELD_INSPECTORS': [
+        'drf_yasg.inspectors.CamelCaseJSONFilter',
+        'drf_yasg.inspectors.InlineSerializerInspector',
+        'drf_yasg.inspectors.RelatedFieldInspector',
+        'drf_yasg.inspectors.ChoiceFieldInspector',
+        'drf_yasg.inspectors.FileFieldInspector',
+        'drf_yasg.inspectors.DictFieldInspector',
+        'drf_yasg.inspectors.SerializerMethodFieldInspector',
+    ],
+}
 
 
 MIDDLEWARE = [

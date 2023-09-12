@@ -14,14 +14,19 @@
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="664ae031-a223-49b4-8d19-bb8fe2296fbc">
       <console name="buzzing" type="STANDARD" schema="awsbuzzing" session="Main"><![CDATA[use awsbuzzing;
-select * from congestion where congestion_id >25000;
+select * from congestion where congestion_id >46200;
 
 select * from location;
 
 select * from daily_congestion_statistic where daily_congestion_statistic_id > 2900;
 select * from weekly_congestion_statistic ;
+SELECT * FROM congestion ORDER BY congestion_id DESC;
 
-select * from users;]]></console>
+select * from users;
+
+select * from ban;
+select * from report;
+select * from BlackList;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -39,6 +44,9 @@ select * from users;]]></console>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />
+  </component>
+  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
+    <recently-used-interfaces />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
