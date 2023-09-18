@@ -31,7 +31,7 @@ jobs:
         echo '3.34.147.253 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBGlJ0+sDok0Up66RDn3+5WsBmupvBL14zUBx7CJwULOd2qU65kFE2MEj5u93SriS5LjwZ5DqHGBdkNKl/VGEX3g=' >> ~/.ssh/known_hosts
         echo '3.34.147.253 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCywcdLiX3GJ6ZpAKchKuEsNTeiWnFe9FJqrZCbOE4g6/M2VdwlusMGQDIA1l+V500qQbiSms6vKnRaSKiDLnVM8fz9H93pNHQ+XTbfy9DPALyOlRBDXKvoR4APqiRjXh6/3HmBPptV6VR/fREuv1+fwnA84uIxWlCZgcLYWe8NUVqjfldlVwUOqOe+c0jcl4OHE8Les2M0i8x6qr9gjnpEXOuYcg4GxGup8UEimRBaTikjUM6MPCNEYGqMiGHzhiDhAHzicQTmgs2lpotHfcScohBXDI8VI/5utumTiHdxr4cC71CVKiVJE9ZO5+mQU0DM1w/3H34OGyftrvV4HexgjcWE0j0+i1NGWxQDWrEXpyK7i6eITTY12tDstgaGiq5tVBnMC6jye8dech8UH8U60Pdg8GSCwO7fXHvJwHS2q+/ARenTyAQVgY3XU2XDxsxDsdNZcOKihWkXv5sO/TY7SaMN6iIdB16+quI+/gU4S9b+GXcItnuxsDh36J1hdBc=' >> ~/.ssh/known_hosts
         echo '3.34.147.253 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOeYq1i/ezJq/+q3B4iebrc/q4gr2qxINUtQx33Ve7ym' >> ~/.ssh/known_hosts
-
+        chmod 644 ~/.ssh/known_hosts
 
     - name: Health Check
       run: |
