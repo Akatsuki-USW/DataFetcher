@@ -22,6 +22,9 @@ jobs:
         scp -i private_key.pem -r * ubuntu@3.34.147.253:/home/ubuntu/DataFetcher/
         ssh -i private_key.pem ubuntu@3.34.147.253 'cd /home/ubuntu/DataFetcher/ && sudo docker stop buzzing_admin_container && sudo docker rm buzzing_admin_container && sudo docker build -t awsbuzzing_image . && sudo docker run -d -p 8081:8081 --name buzzing_admin_container awsbuzzing_image'
         rm -f private_key.pem
+        
+    - name: Debug known_hosts
+      run: cat ~/.ssh/known_hosts
 
     - name: Add EC2 to SSH known hosts
       run: |
