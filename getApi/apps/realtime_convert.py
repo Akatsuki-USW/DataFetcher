@@ -17,7 +17,6 @@ class ConvertCongestionData():
 
         # json데이터를 db에 저장
         congestion_data_list = json.loads(json_data)
-        print(congestion_data_list)
 
         # 새로운 데이터를 추가할 때 사용할 id값을 찾.
         max_congestion_id = Congestion.objects.aggregate(Max('congestion_id'))['congestion_id__max'] or 0
@@ -44,7 +43,6 @@ class ConvertCongestionData():
                           # 크리에이트는 지우면 실행이 될거같기도 하고?
                           }
             )
-            print(f"{congestion_level} created: {created}")
             max_congestion_id += 1
 
 

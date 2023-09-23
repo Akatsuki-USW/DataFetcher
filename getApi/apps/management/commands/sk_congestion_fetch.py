@@ -31,7 +31,6 @@ class Command(BaseCommand):
                 url = f"{base_url}/{poiId}"
                 response = requests.get(url, headers=headers)
                 sk_congestion_data = response.json()
-                print(sk_congestion_data)
 
                 try:
                     if sk_congestion_data['status']['code'] == '00':
@@ -55,7 +54,6 @@ class Command(BaseCommand):
                             location.realtime_congestion_level = mapped_level
                             location.save(update_fields=['realtime_congestion_level'])
 
-                            print(f"Location {location.name}: CongestionLevel {congestion_level} updated.")
                     else:
                         print(f"Error with SK API: {sk_congestion_data['status']['message']}")
                 except KeyError as e:
