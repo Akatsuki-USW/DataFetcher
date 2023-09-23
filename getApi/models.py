@@ -11,15 +11,21 @@ class LocationCategory(models.Model):
         db_table = 'location_category'
 
 class Location(models.Model):
+    CONGESTION_LEVEL_CHOICES = [
+        (1, 'RELAX'),
+        (2, 'NORMAL'),
+        (3, 'BUZZ'),
+    ]
     location_id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
     api_id = models.IntegerField()
     name = models.CharField(max_length=255, blank=True, null=True)
+    realtime_congestion_level = models.IntegerField(choices=CONGESTION_LEVEL_CHOICES, blank=True, null=True)
     location_category_id = models.ForeignKey(LocationCategory, on_delete=models.SET_NULL, null=True, blank=True, db_column='location_category_id')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'location'
 
 class Congestion(models.Model):
