@@ -40,7 +40,6 @@ class Command(BaseCommand):
         def get_data(city_name):
             url = f'http://openapi.seoul.go.kr:8088/{apikey}/xml/citydata/1/5/{city_name}'
             response = requests.get(url)
-            print(response)
 
             # xml을 딕셔너리로 변환
             congestion_data = xmltodict.parse(response.content)
@@ -65,6 +64,15 @@ class Command(BaseCommand):
                 congestion_level_mapped = congestion_mapping[congestion_level]
             else:
                 congestion_level_mapped = None
+
+            #location.real_time_congesiton에 칼럼 업데이트 추가.
+            location.realtime_congestion_level = congestion_level_mapped
+            location.save(update_fields=['realtime_congestion_level'])
+            return {
+                'location_id': location_id,  # location_id 추가
+                'congestion_level': congestion_level_mapped,
+                'observed_at': observed_at_str,
+            }
 
             return {
                  'location_id': location_id,  # location_id 추가

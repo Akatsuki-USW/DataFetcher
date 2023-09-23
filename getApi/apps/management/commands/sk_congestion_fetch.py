@@ -1,6 +1,5 @@
 import requests
 from django.core.management import BaseCommand
-
 import django_secrets
 from getApi.models import Location, Congestion
 import datetime
@@ -23,15 +22,11 @@ class Command(BaseCommand):
             elif 5 <= congestion_level <= 9:
                 return 3
 
-        # sk는 돈을 지불해야 하니, location에 sk데이터중 가지고 오고싶은 api_id를 적기. 돈 문제라 수작업.
-        allowed_api_ids = [387701,6967166,192300]#에버랜드, 서울랜드, 롯데월드 순.
-
+        allowed_api_ids = [387701,6967166,192300]
         locations = Location.objects.filter(api_id__in=allowed_api_ids)
 
-        # Location에서 api_id 값을 사용하여 SK API를 호출
         for location in locations:
             poiId = location.api_id
-
             if poiId is not None:
                 url = f"{base_url}/{poiId}"
                 response = requests.get(url, headers=headers)
@@ -45,15 +40,20 @@ class Command(BaseCommand):
 
                         for rltm in rltm_list:
                             congestion_level = rltm['congestionLevel']
+                            mapped_level = get_level_mapping(congestion_level)
                             observed_at = rltm['datetime']
                             observed_at = datetime.datetime.strptime(observed_at, '%Y%m%d%H%M%S')
 
                             congestion = Congestion(
                                 location_id=location.pk,
                                 observed_at=observed_at,
-                                congestion_level=get_level_mapping(congestion_level)
+                                congestion_level=mapped_level
                             )
                             congestion.save()
+
+                            # Update the location's realtime_congestion_level
+                            location.realtime_congestion_level = mapped_level
+                            location.save(update_fields=['realtime_congestion_level'])
 
                             print(f"Location {location.name}: CongestionLevel {congestion_level} updated.")
                     else:
