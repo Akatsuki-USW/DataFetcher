@@ -13,7 +13,6 @@ class ConvertCongestionData():
 
         # json데이터를 db에 저장
         city_data_list = json.loads(json_data)
-        print(city_data_list)
         #중복 데이터는 업데이트함. 없으면 만들고.
         location_category = LocationCategory.objects.get(location_category_id=2)
 
@@ -34,5 +33,3 @@ class ConvertCongestionData():
             _, created = Location.objects.update_or_create(
                 name=city_name, location_category_id=location_category, defaults=defaults)
 
-
-            print(f"{city_name} created: {created}")

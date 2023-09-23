@@ -35,7 +35,6 @@ class Command(BaseCommand):
             statistics = [{"time": hour, "congestionLevel": congestion_level} for hour, congestion_level in
                           hourly_averages.items()]
 
-            print(statistics)
 
             statistic = DailyCongestionStatistic.objects.create(
                 location_id=location_id,
