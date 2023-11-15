@@ -1,9 +1,9 @@
 django_secrets.py
-Dokerfile
+Dockerfile
 uwsgi.ini
 logs
 nginx_docker.conf
-docker_compose.yml
+docker-compose.yml
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 

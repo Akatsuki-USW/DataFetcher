@@ -66,6 +66,9 @@ INSTALLED_APPS = [
     #swagger
     'drf_yasg',
     'rest_framework',
+
+    #cors
+    'corsheaders',
 ]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -111,6 +114,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #cors
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -133,6 +138,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -193,7 +199,6 @@ USE_TZ = False # db저장시 서울시간대로 하려면 False로 해야함.
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
